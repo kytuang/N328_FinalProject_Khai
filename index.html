@@ -1,68 +1,77 @@
 
-<!-- Code from d3-graph-gallery.com -->
 <!DOCTYPE html>
-<meta charset="utf-8">
+<html>
+<head>
+	<title>Project 1 - sample code 2</title>
+	<script src="https://d3js.org/d3.v3.min.js"></script>
+	<style>
+    	text { 
+			font-family: Arial; 
+			font-size: 15px;
+		}
+		.axis path, .axis line {
+			fill: none;
+			stroke: black;
+			shape-rendering: crispEdges;
+		}
+		.tick text {
+			fill: black;
+			font-size: 11px;
+		}
 
-<!-- Load d3.js -->
-<script src="https://d3js.org/d3.v4.js"></script>
+		rect {
+			stroke: white;
+		}
+	</style>
+</head>
+<body>
 
-<!-- Create a div where the graph will take place -->
-<div id="my_dataviz"></div>
+	<svg id="main" width="600" height="600">
+		<text id='label' x='20' y='20'>Energy prodcution for the US</text>
+		<g transform="translate(30,40)"></g>
+	</svg>
+
+	
+	<script>
+
+		var CHART_WIDTH = 400;
+		var CHART_HEIGHT = 130;
+
+		var MAX_BAR_HEIGHT = 100;
+
+		var energyProduction = [];
+
+		function drawLineChart() 
+		{
+			var maxValue=d3.max(energyProduction),xScale=d3.scale.linear(),yScale=d3.scale.linear();xScale.domain([1980,2012]).range([0,CHART_WIDTH]),yScale.domain([0,100]).range([CHART_HEIGHT,0]);var pathGenerator=d3.svg.line().x(function(e){return xScale(e.year)}).y(function(e){return yScale(e.production)}),g=d3.select("svg").select("g"),xAxis=d3.svg.axis().scale(xScale).orient("bottom").tickFormat(function(e){return""+e}),yAxis=d3.svg.axis().scale(yScale).orient("left");g.append("g").attr("class","axis").attr("transform","translate(0,"+CHART_HEIGHT+")").call(xAxis),g.append("g").attr("class","axis").call(yAxis),g.append("path").style("fill","none").style("stroke","steelblue").style("stroke-width","3px").attr("d",pathGenerator(energyProduction));
+
+		}
+			
+
+		d3.csv('https://raw.githubusercontent.com/asapkyxy/N328_FinalProject_Khai/b9ab7ffa802cc4f5f86c0d1ee422c8a3b27d7f01/data/energy_us.csv', function(data) 
+		{
+			for (var i=0; i<data.length; i++)
+			{
+				var record = data[i];
+				
+				// loop through all years, from 1980 to 2012
+				for (var y=1980; y<=2012; y++) 
+				{
+					var value = record[y];
+					var object = {
+						year: y,
+						production: +value
+					};
+
+					energyProduction.push(object);
+				}
+			}
+			drawLineChart();
+
+		});
+		
+	</script>
+</body>
 
 
-<script>
-
-// set the dimensions and margins of the graph
-var margin = {top: 10, right: 30, bottom: 30, left: 60},
-    width = 460 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
-
-// append the svg object to the body of the page
-var svg = d3.select("#my_dataviz")
-  .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
-
-//Read the data
-d3.csv("https://github.com/asapkyxy/N328_FinalProject_Khai/blob/b9ab7ffa802cc4f5f86c0d1ee422c8a3b27d7f01/data/energy_us.csv",
-
-  // When reading the csv, I must format variables:
-  function(d){
-    return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
-  },
-
-  // Now I can use this dataset:
-  function(data) {
-
-    // Add X axis --> it is a date format
-    var x = d3.scaleTime()
-      .domain(d3.extent(data, function(d) { return d.date; }))
-      .range([ 0, width ]);
-    svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
-
-    // Add Y axis
-    var y = d3.scaleLinear()
-      .domain([0, d3.max(data, function(d) { return +d.value; })])
-      .range([ height, 0 ]);
-    svg.append("g")
-      .call(d3.axisLeft(y));
-
-    // Add the line
-    svg.append("path")
-      .datum(data)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
-      .attr("d", d3.line()
-        .x(function(d) { return x(d.date) })
-        .y(function(d) { return y(d.value) })
-        )
-
-})
-
-</script>
+</html>
