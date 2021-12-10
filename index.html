@@ -37,7 +37,7 @@
 <p style="text-align:center;"><b>Top 10 US Restaurants Chains in 2020</b></p>
 	</svg>
 
-<button class="button button1" onclick="update('sales')">Sales(in $ 000k)</button>
+<button class="button button1" onclick="update('sales')">Sales(in $)</button>
 <button class="button button2" onclick="update('units')">Number of Units</button>
 </div>
 
@@ -90,7 +90,7 @@
       var u = svg.selectAll("rect")
         .data(data)
   
-      // update graph
+      //update graph
       u
         .enter()
         .append("rect")
