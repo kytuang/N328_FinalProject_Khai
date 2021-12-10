@@ -4,21 +4,53 @@
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3.v4.js"></script>
 
-<!-- Add 2 buttons -->
-<button onclick="update('CHAINS')">Variable 1</button>
-<button onclick="update('UNITS')">Variable 2</button>
+<style>
+    text { 
+    font-family: Arial; 
+    font-size: 10px;
 
-<!-- Create a div where the graph will take place -->
-<div id="my_dataviz"></div>
+  }
+  .button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+.button1 {
+  background-color: white; 
+  color: black; 
+  border: 2px solid #4CAF50;
+}
+.button2 {
+  background-color: white; 
+  color: black; 
+  border: 2px solid #008CBA;
+}
+</style>
+
+<p style="text-align:center;"><b>Top 10 US Restaurants Chains in 2020</b></p>
+	</svg>
+
+<button class="button button1" onclick="update('sales')">Sales(in $ 000k)</button>
+<button class="button button2" onclick="update('units')">Number of Units</button>
+</div>
+
+<div id="mydata"></div>
 <script>
 
   // set the dimensions and margins of the graph
-  var margin = {top: 30, right: 30, bottom: 70, left: 60},
-      width = 460 - margin.left - margin.right,
-      height = 400 - margin.top - margin.bottom;
+  var margin = {top: 50, right: 50, bottom: 80, left: 80},
+      width = 900 - margin.left - margin.right,
+      height = 600 - margin.top - margin.bottom;
   
   // append the svg object to the body of the page
-  var svg = d3.select("#my_dataviz")
+  var svg = d3.select("#mydata")
     .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
@@ -26,55 +58,54 @@
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
   
-  // Initialize the X axis
+  //X axis
   var x = d3.scaleBand()
     .range([ 0, width ])
     .padding(0.2);
   var xAxis = svg.append("g")
     .attr("transform", "translate(0," + height + ")")
   
-  // Initialize the Y axis
+  //Y axis
   var y = d3.scaleLinear()
     .range([ height, 0]);
   var yAxis = svg.append("g")
     .attr("class", "myYaxis")
   
   
-  // A function that create / update the plot for a given variable:
-  function update(selectedVar) {
+  // create and update graph
+  function update(groupVar) {
   
     // Parse the Data
     d3.csv("https://raw.githubusercontent.com/asapkyxy/N328_FinalProject_Khai/main/data/Top10Chains2020.csv", function(data) {
   
       // X axis
-      x.domain(data.map(function(d) { return d.CHAINS; }))
+      x.domain(data.map(function(d) { return d.chains; }))
       xAxis.transition().duration(1000).call(d3.axisBottom(x))
   
-      // Add Y axis
-      y.domain([0, d3.max(data, function(d) { return +d[selectedVar] }) ]);
+      // Y axis
+      y.domain([0, d3.max(data, function(d) { return +d[groupVar] }) ]);
       yAxis.transition().duration(1000).call(d3.axisLeft(y));
   
-      // variable u: map data to existing bars
+      // map data
       var u = svg.selectAll("rect")
         .data(data)
   
-      // update bars
+      // update graph
       u
         .enter()
         .append("rect")
         .merge(u)
         .transition()
         .duration(1000)
-          .attr("x", function(d) { return x(d.SALES); })
-          .attr("y", function(d) { return y(d[selectedVar]); })
+          .attr("x", function(d) { return x(d.chains); })
+          .attr("y", function(d) { return y(d[groupVar]); })
           .attr("width", x.bandwidth())
-          .attr("height", function(d) { return height - y(d[selectedVar]); })
-          .attr("fill", "#69b3a2")
+          .attr("height", function(d) { return height - y(d[groupVar]); })
+          .attr("fill", "#699fb3")
     })
   
   }
-  
   // Initialize plot
-  update('CHAINS')
+  update('sales')
   
   </script>
