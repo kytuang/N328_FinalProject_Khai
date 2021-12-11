@@ -86,7 +86,7 @@
       y.domain([0, d3.max(data, function(d) { return +d[groupVar] }) ]);
       yAxis.transition().duration(1000).call(d3.axisLeft(y));
   
-      // map data
+      //map data
       var u = svg.selectAll("rect")
         .data(data)
   
