@@ -1,6 +1,6 @@
 Documentation Page
 
-Link to visualization website: https://asapkyxy.github.io/N328_FinalProject_Khai/
+Link to visualization website: https://kytuang.github.io/N328_FinalProject_Khai/
 
 
 Link to YouTube presentation: https://youtu.be/3TG53gi_lD4
